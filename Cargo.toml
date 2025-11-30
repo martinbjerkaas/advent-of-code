@@ -1,0 +1,8 @@
+[package]
+name = "aoc"
+version = "0.1.0"
+edition = "2024"
+authors = ["Martin Bjerkås"]
+description = "A common lib and all my solutions to Advent Of Code"
+
+[dependencies]
