@@ -47,4 +47,7 @@ fn main() {
 
     println!("{}", ws_test_grid.get_grid_as_table());
 
+    let test = -82_i32.abs();
+    println!("365 % 100: {}", test);
+
 }
