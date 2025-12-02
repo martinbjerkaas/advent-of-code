@@ -184,16 +184,19 @@ impl Grid {
         let column_divider = format!("{}+","-".repeat(column_width));
         let horizontal_divider = format!("+{}+{}","-".repeat(column_width),column_divider.repeat(self.width as usize));
 
+        let header_column_divider = format!("{}+","=".repeat(column_width));
+        let header_horizontal_divider = format!("+{}+{}","=".repeat(column_width),header_column_divider.repeat(self.width as usize));
+
         let table_width = horizontal_divider.len();
         let table_title_spaces = table_width - (table_title_text.len()+2);
-        let title = format!("{} {} {}", "#".repeat(table_title_spaces/2), table_title_text, "#".repeat(table_title_spaces - (table_title_spaces/2)));
+        let _title = format!("{} {} {}", "#".repeat(table_title_spaces/2), table_title_text, "#".repeat(table_title_spaces - (table_title_spaces/2)));
 
         
         let vertical_divider = "|";
 
         // TITLE
-        result.push_str(&title);
-        result.push_str(&format!("\n{horizontal_divider}\n"));
+        //result.push_str(&title);
+        result.push_str(&format!("{header_horizontal_divider}\n"));
         
         // HEADER ROW title + index
 
@@ -208,6 +211,8 @@ impl Grid {
 
         }
 
+        result.push_str(&format!("\n{header_horizontal_divider}"));
+
         // DATA ROW
         for y_pos in 0..self.height{
             let row: Vec<(Point, char)> = self.points.clone()
@@ -220,8 +225,6 @@ impl Grid {
                 }})
             .collect();
 
-            result.push_str(&format!("\n{horizontal_divider}"));
-
             let mut spaces = column_width-y_pos.to_string().len();
             let first_row = format!("{vertical_divider}{}{y_pos}{}{vertical_divider}", " ".repeat(spaces/2), " ".repeat(spaces-(spaces/2)));
             result.push_str(&format!("\n{first_row}"));
@@ -230,8 +233,8 @@ impl Grid {
                 spaces = column_width-data.to_string().len();
                 result.push_str(&format!("{}{}{}{vertical_divider}", " ".repeat(spaces/2), data ," ".repeat(spaces-(spaces/2))));
             }
+            result.push_str(&format!("\n{horizontal_divider}"));
         }
-        result.push_str(&format!("\n{horizontal_divider}"));
 
         return result;
     }
