@@ -130,20 +130,20 @@ fn main(){
 
 }
 
-/* #[cfg(test)]
+#[cfg(test)]
 mod tests {
     use super::*;
     
     #[test]
     fn first_part_is_correct() {
         let file_content = fs::read_to_string(Path::new(INPUT_FILE_PATH)).expect("Could not load file");
-        assert_eq!(first_part(&file_content), 15873079081);
+        assert_eq!(first_part(&file_content), 1428);
     }
 
     #[test]
     fn second_part_is_correct() {
         let file_content = fs::read_to_string(Path::new(INPUT_FILE_PATH)).expect("Could not load file");
-        assert_eq!(second_part(&file_content), 22617871034);
+        assert_eq!(second_part(&file_content), 8936);
 }
 
-} */
+}
