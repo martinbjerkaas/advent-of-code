@@ -243,6 +243,10 @@ impl Grid {
         return self.points.insert(*point, data);
     }
 
+    pub fn change_cell_data_no_return(&mut self, point: &Point, data: char) {
+        self.points.insert(*point, data);
+    }
+
     pub fn are_points_inbounds(&self, points: Vec<Point>) -> bool {
         let result: Vec<Point> = points.iter().filter_map(|point| {
             if !self.points.contains_key(point) {
