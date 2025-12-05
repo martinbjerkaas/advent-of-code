@@ -21,7 +21,7 @@ fn first_part(inputstring: &str) -> u64 {
 
     let accessable_points : Vec<Point>= points_to_check.iter()
         // total count of all
-        .filter_map(|(point, character)| {
+        .filter_map(|(point, _character)| {
             let mut adjacent_points = 0;
             for direction in directions {
                 if let Some(adjacent_point) = grid.points.get(&point.get_point_in_direction(direction)) {
@@ -41,7 +41,10 @@ fn first_part(inputstring: &str) -> u64 {
 
     let result = accessable_points.iter().count() as u64;
 
-    fs::write(Path::new("output/2025-4.txt"), grid.get_grid_as_table());
+    match fs::write(Path::new("output/2025-4.txt"), grid.get_grid_as_table()) {
+        Ok(saved_bytes) => println!("Successfyllt saved the grid in output/ {:?}", saved_bytes),
+        Err(err) => println!("An error occured saving grid {err}")
+    };
 
     accessable_points.iter().for_each(|point| grid.change_cell_data_no_return(&point, 'x'));
 
@@ -49,7 +52,10 @@ fn first_part(inputstring: &str) -> u64 {
         grid.change_cell_data(&point, 'x');
     } */
 
-    fs::write(Path::new("output/2025-4-final.txt"), grid.get_grid_as_table());
+    match fs::write(Path::new("output/2025-4-final.txt"), grid.get_grid_as_table()) {
+        Ok(saved_bytes) => println!("Successfyllt saved the grid in output/ {:?}", saved_bytes),
+        Err(err) => println!("An error occured saving grid {err}")
+    };
 
     //println!("Number of accessable tp: {}", accessable_points.count());
     return result;
@@ -82,7 +88,7 @@ fn second_part(inputstring: &str) -> u64 {
         if !points_to_check.is_empty() {
             let accessable_points : Vec<Point>= points_to_check.iter()
             // total count of all
-            .filter_map(|(point, character)| {
+            .filter_map(|(point, _character)| {
                 let mut adjacent_points = 0;
                 for direction in directions {
                     if let Some(adjacent_point) = grid.points.get(&point.get_point_in_direction(direction)) {
@@ -98,10 +104,12 @@ fn second_part(inputstring: &str) -> u64 {
                 }
             }
             ).collect();
+
             if accessable_points.is_empty() {
                 keep_checking = false;
                 break
             }
+
             removed_paper_rolls += accessable_points.iter().count() as u64;
 
             accessable_points.iter().for_each(|point| grid.change_cell_data_no_return(&point, 'x'));
@@ -125,9 +133,6 @@ fn main(){
         },
         Err(err) => eprintln!("Could not find inputfile with error: {err}")
     }
-
-
-
 }
 
 #[cfg(test)]
