@@ -1,5 +1,5 @@
 use std::path::Path;
-use std::{env, fs};
+use std::{env, fs, io};
 use std::fs::OpenOptions;
 use std::io::Error;
 
@@ -63,10 +63,24 @@ fn main() {
                 };
             }
 
-            match fs::copy(template_file, Path::new(&format!("src/bin/{year}-{day}.rs"))) {
+            println!("Are you sure you want to overwrite the file with template? [yes/no]");
+            let mut overwrite_confirmation = String::new();
+
+            io::stdin() 
+                .read_line(&mut overwrite_confirmation) 
+                .expect("Failed to read line");
+
+            overwrite_confirmation = overwrite_confirmation.trim().to_lowercase();
+
+            if overwrite_confirmation == "yes" || overwrite_confirmation == "y" {
+                println!("\nOverwriting existing file with template file");
+                match fs::copy(template_file, Path::new(&format!("src/bin/{year}-{day}.rs"))) {
                 Ok(result) => println!("Copied {result} bytes"),
                 Err(err) => eprintln!("Failed copying template to file with error: {err}")
             }
+        } else {
+            eprintln!("\nYou chose not to overwrite template");
+        }
 
         },
         _ => eprintln!("Unknown command")

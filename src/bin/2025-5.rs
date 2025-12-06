@@ -1,10 +1,9 @@
-use std::{cmp::{Ordering, min, max}, collections::{BTreeSet, HashSet, btree_set::Range}, fs, ops::{RangeFrom, RangeInclusive}, path::Path};
+use std::{fs, ops::RangeInclusive, path::Path};
 //use aoc::*;
 
 const INPUT_FILE_PATH: &'static str = "data/2025-5.txt";
 
 fn first_part(inputstring: &str) -> u64 {
-    // Split input into two lists -> for all ids, check if contains in each range -> if in range include in iterator and count.
     let (ranges, ids) = inputstring.split_once("\n\n").expect("Could not split by empty newline");
     let converted_ranges : Vec<_> = ranges.lines().filter_map(|range_as_str| {
         let (start_range, end_range) = range_as_str.split_once("-").expect("Could not parse str to range");
@@ -35,7 +34,7 @@ fn second_part(inputstring: &str) -> u64 {
     let mut all_ranges: Vec<RangeInclusive<u64>> = ranges.lines()
         .filter_map(|range| {
             let (start,end) = range.split_once("-").expect("Could not split range to tuple");
-            Some((start.parse::<u64>().ok()?..=end.parse::<u64>().ok()?))
+            Some(start.parse::<u64>().ok()?..=end.parse::<u64>().ok()?)
         }).collect();
 
     println!("Uncompressed ranges: {}", all_ranges.iter().count());

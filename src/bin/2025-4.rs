@@ -74,14 +74,14 @@ fn second_part(inputstring: &str) -> u64 {
         Direction::DiagonalUpLeft,
         Direction::DiagonalUpRight
         ];
-    let mut keep_checking = true;
+    let mut _keep_checking = true;
     let mut removed_paper_rolls: u64 = 0;
 
-    while keep_checking {
+    while _keep_checking {
         let points_to_check: Vec<(&Point,&char)> = grid.points.iter().filter(|&point| *point.1 == '@').collect();
         
         if points_to_check.is_empty() {
-            keep_checking = false;
+            _keep_checking = false;
             break
         }
 
@@ -106,7 +106,7 @@ fn second_part(inputstring: &str) -> u64 {
             ).collect();
 
             if accessable_points.is_empty() {
-                keep_checking = false;
+                _keep_checking = false;
                 break
             }
 
