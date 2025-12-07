@@ -12,7 +12,7 @@ pub enum Direction {
     DiagonalDownLeft
 }
 
-#[derive(Debug, PartialEq, Eq, Clone, Copy)]
+#[derive(Debug, PartialEq, Eq, Clone, Copy, Hash)]
 pub struct Point {
     pub x: i32,
     pub y: i32
