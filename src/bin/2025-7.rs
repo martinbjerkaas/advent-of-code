@@ -41,7 +41,7 @@ fn first_part(inputstring: &str) -> u32{
 
     println!("Splits: {}", splits);
 
-    //fs::write(Path::new("output/2025-7.txt"), grid.get_grid_as_table());
+    let _ = fs::write(Path::new("output/2025-7-pretty.txt"), grid.get_pretty_print_clean('.'));
     return splits
 }
 

@@ -1,0 +1,29 @@
+       S       
+       |         = root     -> 2 childs
+      |^|        
+      | |        = 2x root  -> 2 child each
+     |^|^|       
+     | | |       = 3x root  -> 2 child each
+    |^|^|^|      
+    | | | |      = 4x root  -> 9 total child
+   |^|^|||^|     
+   | | ||| |     = 6x root  -> 13 total child
+  |^|^|||^|^|    = 7x root  -> 11 total child
+  | | ||| | |    
+ |^|||^|| ||^| 
+ | ||| || || | 
+|^|^|^|^|^|||^|
+| | | | | ||| |
+
+       S       
+       |         -> 1 leg
+      |^|        -> 2 legs
+     |^|^|       -> 3 legs
+    |^|^|^|      -> 4 legs
+   |^|^|||^|     -> 6 legs
+  |^|^|||^|^|    -> 7 legs
+  | | ||| | |    -> 7 legs
+ |^|||^|| ||^|   -> 9 legs
+ | ||| || || |   -> 9 legs
+|^|^|^|^|^|||^|  -> 9 legs
+| | | | | ||| |  -> 9 legs 

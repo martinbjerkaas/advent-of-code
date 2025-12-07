@@ -169,6 +169,27 @@ impl Grid {
         return result;
     }
 
+    pub fn get_pretty_print_clean(&self, whitespace_char: char) -> String {
+        let mut result = String::new();
+        let mut last_point = Point {x:0,y:0};
+
+        for point in &self.points {
+            if last_point.y != point.0.y {
+                result.push_str("\n");
+            }
+            if *point.1 == whitespace_char {
+                result.push_str(&format!(" "));
+                println!("Replacing char");
+            } else {
+                result.push_str(&format!("{}", point.1));
+            }
+            
+            last_point = *point.0;
+        }
+
+        return result;
+    }
+
     pub fn get_grid_as_table(&self) -> String {
         let mut result: String = String::new();
         
