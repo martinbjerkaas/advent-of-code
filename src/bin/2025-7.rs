@@ -1,4 +1,4 @@
-use std::{collections::{HashMap, HashSet}, fs, path::Path};
+use std::{collections::{BTreeMap, HashMap, HashSet}, fs, path::Path};
 use aoc::*;
 
 const INPUT_FILE_PATH: &'static str = "data/2025-7.txt";
@@ -41,7 +41,7 @@ fn first_part(inputstring: &str) -> u32{
 
     println!("Splits: {}", splits);
 
-    let _ = fs::write(Path::new("output/2025-7-pretty.txt"), grid.get_pretty_print_clean('.'));
+    //let _ = fs::write(Path::new("output/2025-7-pretty.txt"), grid.get_pretty_print_clean('.'));
     return splits
 }
 
@@ -76,7 +76,7 @@ fn second_part(inputstring: &str) -> u32 {
         beams.extend(new_beams);    
     }
 
-    // tar utgangspunkt i at alle beams i bunnen er et unikt startpunkt.
+/*     // tar utgangspunkt i at alle beams i bunnen er et unikt startpunkt.
     let bottom_beams: &Vec<&Point> = &beams.iter().filter(|beam| beam.y == grid.height-2).collect();
 
     // traversere oppover, sjekk direction og husk posisjoner jeg har vært innom for hvert start punkt.
@@ -95,24 +95,112 @@ fn second_part(inputstring: &str) -> u32 {
             }
         }
     };
+ */ 
 
+     for beam in beams {
+        if beam != start {
+            grid.change_cell_data_no_return(&beam, '|');
+        }
+    }
 
-    println!("Splits: {}", splits);
-    println!("Bottom beams: {:?}", bottom_beams);
+    // Point : [Point,Point]
+    let directions = [Direction::DiagonalDownLeft, Direction::Down, Direction::DiagonalDownRight];
+    let mut graph: BTreeMap<Point, Vec<Point>> = BTreeMap::new();
 
+    for y in 0..grid.height {
+        let all_pipes = grid.points.iter().filter(|(point, character)| (point.y==y) && (**character=='|'));
+        println!("Pipes at y: {}", y);
+        for (pipepoint, pipechar) in all_pipes {
+            println!("{:?} - {:?}", &pipepoint, &pipechar);
+            for direction in directions {
+                let next_char: Option<char> = match direction {
+                    Direction::DiagonalDownLeft  => grid.points.get(&pipepoint.get_point_in_direction(direction)).copied(),
+                    Direction::Down              => grid.points.get(&pipepoint.get_point_in_direction(direction)).copied(),
+                    Direction::DiagonalDownRight => grid.points.get(&pipepoint.get_point_in_direction(direction)).copied(),
+                    _ => Some('U')
+                };
+
+                if let Some(pipe_char) = next_char {
+                    if pipe_char == '|' {
+                    graph.entry(*pipepoint).or_insert_with(Vec::new).push(pipepoint.get_point_in_direction(direction));
+                }
+            }
+            }
+        }
+    }
+
+    for (node, childs) in &graph {
+
+        println!("Node: {:?} Childs: {:?}", node, childs);
+    }
     
     return splits
+}
+
+fn second_part_two(inputstring: &str) {
+    let mut grid = Grid::new_from_string(inputstring, false);
+    let mut nodes: BTreeMap<Point, Vec<Point>> = BTreeMap::new();
+    let mut splits = 0;
+    let mut current_node = *grid.points.iter().find(|(_, character)| **character == 'S').expect("Could not find start pos").0;
+    println!("Startnode: {:?}", current_node);
+
+    // spare_forrige y sine nodes.
+    
+    let mut children: Vec<Point> = Vec::new(); 
+    let mut pending_nodes : Vec<Point> = Vec::new();
+    let mut next_nodes: Vec<Point> = Vec::new();
+    next_nodes.push(current_node);
+
+    let mut total_children = 0;
+
+    for row_index in 0..grid.height {
+        while next_nodes.len() > 0 {
+            //println!("Next nodes: {:?} Len: {}", &next_nodes, next_nodes.len());
+            let node = next_nodes.pop().unwrap();
+            
+            println!("Node: {:?} Len: {}", node, next_nodes.len());
+
+            match grid.points.get(&node.get_point_in_direction(Direction::Down)) {
+                Some('^') => {
+                    children.push(node.get_point_in_direction(Direction::DiagonalDownLeft));
+                    children.push(node.get_point_in_direction(Direction::DiagonalDownRight));
+                    splits+=1;
+                },
+                Some('.') => {
+                    children.push(node.get_point_in_direction(Direction::Down));
+                },
+                _ => (),
+                None => ()
+            }
+            nodes.insert(node, children.clone());
+            pending_nodes.append(&mut children);
+            
+            
+            //println!("Nodes: {:?}   Children: {:?}   Pending: {:?}", nodes, children, pending_nodes);
+            children.clear();
+        }
+
+        println!(" ----- next node loop finished -----");
+
+        next_nodes = pending_nodes.clone();
+        pending_nodes.clear();
+    }
+
+    println!("Nodes: {:?}", nodes);
+    println!("Total splits: {}", nodes.iter().filter(|x|x.1.len()>1).map(|x| x.1.len() as u16).sum::<u16>())
+    
 }
 fn main(){
     let test_string = ".......S.......\n...............\n.......^.......\n...............\n......^.^......\n...............\n.....^.^.^.....\n...............\n....^.^...^....\n...............\n...^.^...^.^...\n...............\n..^...^.....^..\n...............\n.^.^.^.^.^...^.\n...............";
 
-    println!("First part example: {:?}", first_part(test_string));
-    println!("Second part example: {:?}", second_part(test_string));
+    //println!("First part example: {:?}", first_part(test_string));
+    //println!("Second part example: {:?}", second_part(test_string));
+    println!("Second part 2 example: {:?}", second_part_two(test_string));
 
     match fs::read_to_string(Path::new(INPUT_FILE_PATH)) {
         Ok(file_content) => {
             //println!("First part file input: {:?}", first_part(&file_content));
-            //println!("Second part file input: {:?}", second_part(&file_content));
+            //println!("Second part file input: {:?}", second_part_two(&file_content));
         },
         Err(err) => eprintln!("Could not find inputfile with error: {err}")
     }

@@ -179,7 +179,6 @@ impl Grid {
             }
             if *point.1 == whitespace_char {
                 result.push_str(&format!(" "));
-                println!("Replacing char");
             } else {
                 result.push_str(&format!("{}", point.1));
             }
