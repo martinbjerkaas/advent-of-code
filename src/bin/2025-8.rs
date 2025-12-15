@@ -115,7 +115,7 @@ fn second_part(inputstring: &str) -> u64 {
     println!("\nSlices: {:?}\n", pairs_slice);
 
     circuits.extend(pairs_slice.clone());
-    let mut last_merge:HashSet<u32> = HashSet::new(); 
+    let mut connections:Vec<HashSet<(u32,u32)>> = Vec::new(); // from - to
 
         // antall loops. 1000 i faktisk inputfil
    'merge_loop: for merge_count in 0..1000 {
@@ -124,11 +124,15 @@ fn second_part(inputstring: &str) -> u64 {
                 let circuit_to_check = circuits[index].clone();
                 //println!("Checking: {:?} against {:?}", circuits[circuit_index], circuit_to_check);
                 if !circuits[circuit_index].is_disjoint(&circuit_to_check) && circuits[circuit_index] != circuit_to_check {
-                    last_merge = circuit_to_check.clone();
+                    let intersection = circuits[circuit_index].intersection(&circuit_to_check);
+
+                    println!("inters: {:?}", intersection.map(|x| *x).collect::<Vec<u32>>());
+                    //connections.push(circuit_to_check.clone());
+
                     circuits[circuit_index].extend(circuit_to_check);
                     circuits.remove(index);
                     //println!("Breaking merge loop");
-                    println!("Merging: {:?}", last_merge);
+                    //println!("Merging: {:?}", connections);
                     
                     continue 'merge_loop;
                 }
@@ -136,9 +140,11 @@ fn second_part(inputstring: &str) -> u64 {
         }
     }
 
-    for merge in last_merge {
+    println!("{:?}", connections);
+
+/*     for merge in connections {
         println!("Last merge: {:?}", &junction_boxes[merge as usize]);
-    }
+    } */
 
     println!("\nResult::");
     println!("{:?}", circuits);
